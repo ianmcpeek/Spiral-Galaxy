@@ -210,7 +210,7 @@ var gravityConstant = 6674/1000000; //-4
 var au = 180;
 var cx = 800;
 var cy = 800;
-var mercuryTestRing = {x:cx, y:cy, radius:(au*0.387) - 8};
+var mercuryTestRing = {x:cx, y:cy, radius:(au*0.387) - 8.5};
 
 var rebootSolarSystem = function() {
   gameEngine.entities = [];
