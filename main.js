@@ -225,7 +225,7 @@ var rebootSolarSystem = function() {
 }
 
 var blackHoleSun = function() {
-  gravityMult = 100;
+  gravityMult = 500;
   gameEngine.blackHole = true;
 }
 
