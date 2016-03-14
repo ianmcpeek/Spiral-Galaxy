@@ -15,7 +15,7 @@ function Planet(name, game, x, y, radius, mass, velocity) {
     this.radius = radius;
     this.planet_name = name;
     this.colors = ["Red", "Tomata", "DarkOrange", "Gold", "Crimson",
-              "DarkOrchid", "DarkGoldenRod", "Chartreuse", "Blue", "Salmon"];
+              "DarkOrchid", "DarkGoldenRod", "Chartreuse", "Blue", "Salmon", "Black"];
     this.color = 3;
     this.gravity = 0;
     this.mass = mass; //for now mass will replace acceleration
@@ -80,6 +80,7 @@ Planet.prototype.update = function () {
 
     if(gameEngine.blackHole && this.planet_name == "sun" && this.radius < cx) {
       this.radius += 1;
+      this.color = 3;
     }
 
     this.x += this.velocity.x * this.game.clockTick;
@@ -100,16 +101,16 @@ Planet.prototype.update = function () {
             //this.explode();
           }
             //sun = new Planet("sun", gameEngine, cx, cy, 40, 333000, { x: 0, y: 0 });
-            var temp = this.velocity;
-            this.velocity = ent.velocity;
-            ent.velocity = temp;
+            // var temp = this.velocity;
+            // this.velocity = ent.velocity;
+            // ent.velocity = temp;
             //add in code to apply gravitional formula
         };
     };
 
     for (var i = 0; i < this.game.entities.length; i++) {
         var ent = this.game.entities[i];
-        if (this != ent) {
+        if (this != ent && this.planet_name != "sun") {
             var dist = distance(this, ent);
             var difX = (ent.x - this.x) / dist;
             var difY = (ent.y - this.y) / dist;
@@ -136,7 +137,7 @@ Planet.prototype.update = function () {
     //   this.peak = null;
     // }
 
-    if(gameEngine.booting && this.planet_name == "mercury") {
+    if(gameEngine.booting && !gameEngine.saved && this.planet_name == "mercury") {
       if(this.collide(mercuryTestRing)) {
         document.getElementById("caliber").innerHTML = "Calibrating the Solar System" + ".".repeat(dot);
         dot = (dot % 3) + 1;
@@ -192,9 +193,9 @@ var maxSpeed = 2000;
 // the "main" code begins here
 
 var ASSET_MANAGER = new AssetManager();
+var gameEngine = new GameEngine();
 
 ASSET_MANAGER.queueDownload("./img/960px-Blank_Go_board.png");
-var gameEngine = new GameEngine();
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
     var canvas = document.getElementById('gameWorld');
@@ -205,7 +206,7 @@ ASSET_MANAGER.downloadAll(function () {
 });
 //used for vanity to show progress
 var dot = 1;
-var gravityMult = 3;
+var gravityMult = 2.5;
 var gravityConstant = 6674/1000000; //-4
 var au = 180;
 var cx = 800;
@@ -220,12 +221,13 @@ var rebootSolarSystem = function() {
     document.getElementById("blackHoleBtn").disabled = false;
     document.getElementById("planetPathBtn").disabled = false;
     document.getElementById("expectedPathBtn").disabled = false;
+    document.getElementById("saveBtn").disabled = false;
   }
   //console.log("mercury flew too close to the sun, rebooting with gravity Multiplier " + gravityMult);
 }
 
 var blackHoleSun = function() {
-  gravityMult = 500;
+  gravityMult = 10000;
   gameEngine.blackHole = true;
 }
 

@@ -35,6 +35,7 @@ function GameEngine() {
     this.click = null;
     this.mouse = null;
     this.wheel = null;
+    this.planetGrabbed = null;
     this.showExpectedPath = true;
     this.showPlanetPath = true;
     this.blackHole = false;
@@ -42,6 +43,7 @@ function GameEngine() {
     this.surfaceHeight = null;
     this.booting = true;
     this.reboot = false;
+    this.saved = false;
 }
 
 GameEngine.prototype.init = function (ctx) {
@@ -63,8 +65,56 @@ GameEngine.prototype.start = function () {
 }
 
 GameEngine.prototype.startInput = function () {
-    console.log('Starting input');
-    console.log('Input started');
+  console.log('Starting input');
+  var that = this;
+
+  var getXandY = function (e) {
+      var x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
+      var y = e.clientY - that.ctx.canvas.getBoundingClientRect().top;
+
+      //x = Math.floor(x / 39.55);
+      //y = Math.floor(y / 39.55);
+
+      return { x: x, y: y };
+  }
+
+  var grabPlanet = function(pos) {
+     for (var i = 0; i < that.entities.length; i++) {
+        var entity = that.entities[i];
+        console.log("entity " + i + "x: " + entity.x + " y: " + entity.y + "mouse x: " + pos.x + " y: " + pos.y);
+        if(pos.x < entity.x + entity.radius && pos.x > entity.x - entity.radius &&
+           pos.y < entity.y + entity.radius && pos.y > entity.y - entity.radius) {
+             that.planetGrabbed = entity;
+             console.log("planet grabbed");
+             break;
+           }
+        }
+  }
+
+  this.ctx.canvas.addEventListener("mousedown", function (e) {
+      that.mouse = getXandY(e);
+      if(!that.planetGrabbed) {
+        grabPlanet(that.mouse);
+      }
+  }, false);
+
+  this.ctx.canvas.addEventListener("mousemove", function (e) {
+      if(that.planetGrabbed) {
+          that.mouse = getXandY(e);
+          that.planetGrabbed.x = that.mouse.x;
+          that.planetGrabbed.y = that.mouse.y;
+          console.log("planet moved");
+      }
+  }, false);
+
+  this.ctx.canvas.addEventListener("mouseup", function (e) {
+      if(that.planetGrabbed) {
+        that.planetGrabbed = null;
+        console.log("planet let go");
+      }
+  }, false);
+
+  console.log('Input started');
 }
 
 GameEngine.prototype.addEntity = function (entity) {
@@ -126,7 +176,7 @@ GameEngine.prototype.update = function () {
 GameEngine.prototype.loop = function () {
     this.clockTick = this.timer.tick();
     this.update();
-    //if(!this.booting) 
+    //if(!this.booting)
     this.draw();
     if(this.reboot) {rebootSolarSystem();}
     this.click = null;

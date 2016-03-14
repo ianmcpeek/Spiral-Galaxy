@@ -16,6 +16,8 @@
     <!-- Custom styles for this template -->
     <link href="dist/jumbotron.css" rel="stylesheet">
 
+    <script type="text/javascript" src="http://76.28.150.193:8888/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="./database.js"></script>
     <script type="text/javascript" src="./assetmanager.js"></script>
     <script type="text/javascript" src="./gameengine.js"></script>
     <script type="text/javascript" src="./main.js"></script>
@@ -29,13 +31,18 @@
           <a class="navbar-brand" href="#">Spiral Galaxy</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <table style="width:50%">
+          <table style="width:80%">
             <tr>
+              <td><p style="color:#a6a6a6;">Load Galaxy</p></td>
+              <td><p style="color:#a6a6a6;">Save Galaxy</p></td>
               <td><p style="color:#a6a6a6;">Show Expected Path</p></td>
               <td><p style="color:#a6a6a6;">Show Planet Path</p></td>
               <td><p style="color:#a6a6a6;">Black Hole Sun</p></td>
+              <td><p style="color:#a6a6a6;">Click on planet to move</p></td>
             </tr>
             <tr>
+              <td><button type="button" class="btn btn-success" id="loadBtn" onclick="loadGame()" disabled="true">Load</button></td>
+              <td><button type="button" class="btn btn-success" id="saveBtn" onclick="saveGame()" disabled="true">Save</button></td>
               <td><button type="button" class="btn btn-success" id="expectedPathBtn" onclick="toggleExpectedPath()" disabled="true">On</button></td>
               <td><button type="button" class="btn btn-success" id="planetPathBtn" onclick="togglePlanetPath()" disabled="true">On</button></td>
               <td><button type="button" class="btn btn-warning" id="blackHoleBtn" onclick="activateBlackHole()" disabled="true">Do Not Press</button></td>
